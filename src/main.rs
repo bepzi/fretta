@@ -66,7 +66,7 @@ fn parse_tuning(input: &String) -> Result<Vec<Note>> {
         .map(|i| i.replace(|j| j == ' ', ""))
         .collect();
 
-    let mut notes: Vec<Note> = Vec::new();
+    let mut notes: Vec<Note> = Vec::with_capacity(input.len());
 
     for note in input.into_iter() {
         // TODO: Extract this into something more sensible
@@ -81,9 +81,47 @@ fn parse_tuning(input: &String) -> Result<Vec<Note>> {
     Ok(notes)
 }
 
+fn calculate_note(base_note: Note, fret: usize) -> Note {
+    let mut list: Vec<Note> = Vec::with_capacity(12);
+
+    list.push(base_note);
+    for i in 0..11 {
+        let prev_note = list[i];
+        list.push(prev_note.next());
+    }
+    
+    list[fret % 12]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_calculate_note() {
+        struct Test {
+            base_note: Note,
+            fret: usize,
+            expected: Note,
+        }
+
+        let tests = [
+            Test {
+                base_note: Note::A,
+                fret: 2,
+                expected: Note::B,
+            },
+            Test {
+                base_note: Note::GSharp,
+                fret: 4,
+                expected: Note::C,
+            }
+        ];
+
+        for test in &tests {
+            assert_eq!(test.expected, calculate_note(test.base_note, test.fret));
+        }
+    }
 
     #[test]
     fn test_parse_tuning() {
