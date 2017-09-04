@@ -69,7 +69,7 @@ fn run() -> Result<()> {
         let string = string_range.ind_sample(&mut rng);
         let fret = fret_range.ind_sample(&mut rng);
 
-        println!("What is the {} fret of the {:?} string?", fret, tuning[string]);
+        println!("{:?} string, fret {}", tuning[string], fret);
 
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Failed to read input");
@@ -80,12 +80,13 @@ fn run() -> Result<()> {
             break 'main;
         }
 
-        let answer = Note::try_from_string(&input)?;
+        let guess = Note::try_from_string(&input)?;
 
-        if answer == calculate_note(tuning[string], fret) {
+        let answer = calculate_note(tuning[string], fret);
+        if guess == answer {
             println!("Correct!\n");
         } else {
-            println!("Incorrect!\n");
+            println!("Incorrect! The answer was: {:?}\n", answer);
         }
     }
 
