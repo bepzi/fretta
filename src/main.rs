@@ -69,11 +69,20 @@ fn run() -> Result<()> {
         let string = string_range.ind_sample(&mut rng);
         let fret = fret_range.ind_sample(&mut rng);
 
-        println!("{} string, fret {}", tuning[string], fret);
+        let mut input;
+        'input: loop {
+            println!("{} string, fret {}", tuning[string], fret);
 
-        let mut input = String::new();
-        io::stdin().read_line(&mut input).expect("Failed to read input");
-        let input: String = input.trim().to_string();
+            input = String::new();
+            io::stdin().read_line(&mut input).expect("Failed to read input");
+            input = input.trim().to_string();
+
+            if input.is_empty() {
+                continue 'input;
+            } else {
+                break 'input;
+            }
+        }
 
         if input.to_lowercase() == "q" {
             println!("Quitting...");

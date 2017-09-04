@@ -32,7 +32,8 @@ impl Note {
             "F#" | "Gb" => Ok(Note::FSharp),
             "G" => Ok(Note::G),
             "G#" | "Ab" => Ok(Note::GSharp),
-            _ => bail!("Unrecognized note: {}", s),
+            "" => bail!("note cannot be empty"),
+            _ => bail!("unrecognized note: {}", s),
         }
     }
 
