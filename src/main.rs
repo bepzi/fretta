@@ -1,4 +1,5 @@
 extern crate clap;
+extern crate error_chain;
 extern crate rand;
 
 mod notes;
