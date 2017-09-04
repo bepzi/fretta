@@ -16,9 +16,7 @@ pub enum Note {
 }
 
 impl Note {
-    pub fn try_from_string<S: Into<String>>(s: S) -> Result<Note> {
-        let s = s.into();
-
+    pub fn try_from_string(s: &String) -> Result<Note> {
         match s.as_ref() {
             "A" => Ok(Note::A),
             "A#" | "Bb" => Ok(Note::ASharp),
@@ -33,6 +31,35 @@ impl Note {
             "G" => Ok(Note::G),
             "G#" | "Ab" => Ok(Note::GSharp),
             _ => bail!("Unrecognized note: {}", s),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_try_note_from_string() {
+        let inputs = [
+            String::from("A"),
+            String::from("Ab"),
+            String::from("C#"),
+            String::from("F"),
+        ];
+
+        for input in &inputs {
+            assert!(Note::try_from_string(input).is_ok())
+        }
+
+        let inputs = [
+            String::from("Fb"),
+            String::from("applesauce"),
+            String::from("H#"),
+        ];
+
+        for input in &inputs {
+            assert!(Note::try_from_string(input).is_err())
         }
     }
 }
