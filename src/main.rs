@@ -16,8 +16,9 @@ use errors::*;
 
 use clap::{App, Arg};
 
-use rand::Rng;
-use rand::distributions::Range;
+use rand::distributions::{Range, IndependentSample};
+
+use std::io;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 const APP_NAME: &'static str = "fretta";
@@ -58,6 +59,30 @@ fn run() -> Result<()> {
         vec![Note::E, Note::A, Note::D, Note::G, Note::B, Note::E]
     };
 
+    let num_strings = tuning.len();
+
+    let mut rng = rand::thread_rng();
+    let string_range = Range::new(0, num_strings);
+    let fret_range = Range::new(1, 23);
+
+    loop {
+        let string = string_range.ind_sample(&mut rng);
+        let fret = fret_range.ind_sample(&mut rng);
+
+        println!("What is the {} fret of the {:?} string?", fret, tuning[string]);
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).expect("Failed to read input");
+        let input: String = input.trim().to_string();
+        let answer = Note::try_from_string(&input)?;
+
+        if answer == calculate_note(tuning[string], fret) {
+            println!("Correct!\n");
+        } else {
+            println!("Incorrect!\n");
+        }
+    }
+
     Ok(())
 }
 
@@ -89,7 +114,7 @@ fn calculate_note(base_note: Note, fret: usize) -> Note {
         let prev_note = list[i];
         list.push(prev_note.next());
     }
-    
+
     list[fret % 12]
 }
 
