@@ -6,8 +6,8 @@ extern crate clap;
 extern crate error_chain;
 extern crate rand;
 
-mod notes;
-use notes::*;
+mod note;
+use note::*;
 
 mod errors {
     error_chain! { }
