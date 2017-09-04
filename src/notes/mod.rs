@@ -1,4 +1,5 @@
 use errors::*;
+use std::fmt;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Note {
@@ -50,6 +51,25 @@ impl Note {
             Note::G => Note::GSharp,
             Note::GSharp => Note::A,
         }
+    }
+}
+
+impl fmt::Display for Note {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", match *self {
+            Note::A => "A",
+            Note::ASharp => "A#",
+            Note::B => "B",
+            Note::C => "C",
+            Note::CSharp => "C#",
+            Note::D => "D",
+            Note::DSharp => "D#",
+            Note::E => "E",
+            Note::F => "F",
+            Note::FSharp => "F#",
+            Note::G => "G",
+            Note::GSharp => "G#",
+        })
     }
 }
 

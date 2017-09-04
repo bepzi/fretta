@@ -69,7 +69,7 @@ fn run() -> Result<()> {
         let string = string_range.ind_sample(&mut rng);
         let fret = fret_range.ind_sample(&mut rng);
 
-        println!("{:?} string, fret {}", tuning[string], fret);
+        println!("{} string, fret {}", tuning[string], fret);
 
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Failed to read input");
@@ -86,7 +86,7 @@ fn run() -> Result<()> {
         if guess == answer {
             println!("Correct!\n");
         } else {
-            println!("Incorrect! The answer was: {:?}\n", answer);
+            println!("Incorrect! The answer was: {}\n", answer);
         }
     }
 
