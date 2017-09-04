@@ -1,0 +1,8 @@
+[package]
+name = "fretta"
+version = "0.1.0"
+authors = ["B <ben01189998819991197253@users.noreply.github.com>"]
+
+[dependencies]
+clap = "2.26"
+rand = "0.3"
