@@ -65,7 +65,7 @@ fn run() -> Result<()> {
     let string_range = Range::new(0, num_strings);
     let fret_range = Range::new(1, 23);
 
-    loop {
+    'main: loop {
         let string = string_range.ind_sample(&mut rng);
         let fret = fret_range.ind_sample(&mut rng);
 
@@ -74,6 +74,12 @@ fn run() -> Result<()> {
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Failed to read input");
         let input: String = input.trim().to_string();
+
+        if input.to_lowercase() == "q" {
+            println!("Quitting...");
+            break 'main;
+        }
+
         let answer = Note::try_from_string(&input)?;
 
         if answer == calculate_note(tuning[string], fret) {
@@ -94,12 +100,6 @@ fn parse_tuning(input: &String) -> Result<Vec<Note>> {
     let mut notes: Vec<Note> = Vec::with_capacity(input.len());
 
     for note in input.into_iter() {
-        // TODO: Extract this into something more sensible
-        // If any of the characters are Q, quit the program
-        if note == "Q" || note == "q" {
-            ::std::process::exit(0);
-        }
-
         notes.push(Note::try_from_string(&note)?);
     }
 
