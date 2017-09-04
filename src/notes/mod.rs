@@ -1,5 +1,6 @@
 use errors::*;
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Note {
     A,
     ASharp,

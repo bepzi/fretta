@@ -49,5 +49,57 @@ fn run() -> Result<()> {
             .takes_value(true))
         .get_matches();
 
+    let tuning: Vec<Note> = if let Some(input) = matches.value_of("tuning") {
+        parse_tuning(&String::from(input))?
+    } else {
+        vec![Note::E, Note::A, Note::D, Note::G, Note::B, Note::E]
+    };
+
     Ok(())
+}
+
+fn parse_tuning(input: &String) -> Result<Vec<Note>> {
+    let input: Vec<String> = input.split(',')
+        .map(|i| i.replace(|j| j == ' ', ""))
+        .collect();
+
+    let mut notes: Vec<Note> = Vec::new();
+
+    for note in input.into_iter() {
+        notes.push(Note::try_from_string(&note)?);
+    }
+
+    Ok(notes)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_tuning() {
+        struct Test {
+            input: String,
+            expected: Vec<Note>,
+        }
+
+        let tests = [
+            Test {
+                input: String::from("E, A, D, G, B, E"),
+                expected: vec![Note::E, Note::A, Note::D, Note::G, Note::B, Note::E],
+            },
+            Test {
+                input: String::from("D#, A, D#, Gb, B"),
+                expected: vec![Note::DSharp, Note::A, Note::DSharp, Note::FSharp, Note::B],
+            },
+            Test {
+                input: String::from("B, A, D"),
+                expected: vec![Note::B, Note::A, Note::D],
+            }
+        ];
+
+        for test in &tests {
+            assert_eq!(test.expected, parse_tuning(&test.input).unwrap());
+        }
+    }
 }
