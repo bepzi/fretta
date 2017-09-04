@@ -34,6 +34,23 @@ impl Note {
             _ => bail!("Unrecognized note: {}", s),
         }
     }
+
+    pub fn next(&self) -> Note {
+        match *self {
+            Note::A => Note::ASharp,
+            Note::ASharp => Note::B,
+            Note::B => Note::C,
+            Note::C => Note::CSharp,
+            Note::CSharp => Note::D,
+            Note::D => Note::DSharp,
+            Note::DSharp => Note::E,
+            Note::E => Note::F,
+            Note::F => Note::FSharp,
+            Note::FSharp => Note::G,
+            Note::G => Note::GSharp,
+            Note::GSharp => Note::A,
+        }
+    }
 }
 
 #[cfg(test)]

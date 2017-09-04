@@ -16,6 +16,9 @@ use errors::*;
 
 use clap::{App, Arg};
 
+use rand::Rng;
+use rand::distributions::Range;
+
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 const APP_NAME: &'static str = "fretta";
 
