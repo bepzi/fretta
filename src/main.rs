@@ -66,6 +66,12 @@ fn parse_tuning(input: &String) -> Result<Vec<Note>> {
     let mut notes: Vec<Note> = Vec::new();
 
     for note in input.into_iter() {
+        // TODO: Extract this into something more sensible
+        // If any of the characters are Q, quit the program
+        if note == "Q" || note == "q" {
+            ::std::process::exit(0);
+        }
+
         notes.push(Note::try_from_string(&note)?);
     }
 
