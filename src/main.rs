@@ -31,8 +31,6 @@ fn main() {
             println!("caused by: {}", e);
         }
 
-        // The backtrace is not always generated. Try to run this example
-        // with `RUST_BACKTRACE=1`.
         if let Some(backtrace) = e.backtrace() {
             println!("backtrace: {:?}", backtrace);
         }
@@ -53,6 +51,7 @@ fn run() -> Result<()> {
             .takes_value(true))
         .get_matches();
 
+    // Retrieve the tuning option from the -t flag, or the default tuning of EADGBE
     let tuning: Vec<Note> = if let Some(input) = matches.value_of("tuning") {
         parse_tuning(&String::from(input))?
     } else {
@@ -61,37 +60,41 @@ fn run() -> Result<()> {
 
     let num_strings = tuning.len();
 
+    // Create the RNG needed to pick a random string and fret
     let mut rng = rand::thread_rng();
     let string_range = Range::new(0, num_strings);
     let fret_range = Range::new(1, 23);
 
     'main: loop {
+        // Pick a random string and fret
         let string = string_range.ind_sample(&mut rng);
         let fret = fret_range.ind_sample(&mut rng);
 
+        // Repeat until the input isn't an empty string
         let mut input;
         'input: loop {
             println!("{} string, fret {}", tuning[string], fret);
 
+            // Try to get the answer from the user
             input = String::new();
             io::stdin().read_line(&mut input).expect("Failed to read input");
             input = input.trim().to_string();
 
-            if input.is_empty() {
-                continue 'input;
-            } else {
+            // Quit once we have an answer
+            if !input.is_empty() {
                 break 'input;
             }
         }
 
+        // If the user wanted to quit, end the program
         if input.to_lowercase() == "q" {
             println!("Quitting...");
             break 'main;
         }
 
         let guess = Note::try_from_string(&input)?;
-
         let answer = calculate_note(tuning[string], fret);
+
         if guess == answer {
             println!("Correct!\n");
         } else {
@@ -102,9 +105,12 @@ fn run() -> Result<()> {
     Ok(())
 }
 
+/// Converts a comma-separated string of notes into a Vec<Note>, returning an error if any
+/// of the inputs can't be parsed.
 fn parse_tuning(input: &String) -> Result<Vec<Note>> {
+    // Strip out ',' and any whitespace into a vec of potential notes
     let input: Vec<String> = input.split(',')
-        .map(|i| i.replace(|j| j == ' ', ""))
+        .map(|i| i.replace(|j: char| j.is_whitespace(), ""))
         .collect();
 
     let mut notes: Vec<Note> = Vec::with_capacity(input.len());
@@ -116,6 +122,8 @@ fn parse_tuning(input: &String) -> Result<Vec<Note>> {
     Ok(notes)
 }
 
+/// Given a base note representing a string and a fret on the fretboard, calculates the
+/// corresponding note at that fret.
 fn calculate_note(base_note: Note, fret: usize) -> Note {
     let mut list: Vec<Note> = Vec::with_capacity(12);
 
@@ -125,6 +133,8 @@ fn calculate_note(base_note: Note, fret: usize) -> Note {
         list.push(prev_note.next());
     }
 
+    // Since there are 12 notes, `fret` % 12 will reduce the index to the corresponding note in
+    // the list of notes that were generated from the base note
     list[fret % 12]
 }
 
