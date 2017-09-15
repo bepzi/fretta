@@ -119,6 +119,10 @@ fn parse_tuning(input: &String) -> Result<Vec<Note>> {
         notes.push(Note::try_from_string(&note)?);
     }
 
+    // Remove any repetitions of notes so that the chance of picking a string
+    // is always the same
+    notes.dedup();
+
     Ok(notes)
 }
 
