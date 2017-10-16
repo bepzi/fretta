@@ -6,4 +6,4 @@ authors = ["B <ben01189998819991197253@users.noreply.github.com>"]
 [dependencies]
 clap = "2.26"
 rand = "0.3"
-error-chain = "0.10"
+error-chain = "0.11"
