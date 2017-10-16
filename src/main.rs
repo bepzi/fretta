@@ -107,7 +107,7 @@ fn run() -> Result<()> {
 
 /// Converts a comma-separated string of notes into a Vec<Note>, returning an error if any
 /// of the inputs can't be parsed.
-fn parse_tuning(input: &String) -> Result<Vec<Note>> {
+fn parse_tuning(input: &str) -> Result<Vec<Note>> {
     // Strip out ',' and any whitespace into a vec of potential notes
     let input: Vec<String> = input.split(',')
         .map(|i| i.replace(|j: char| j.is_whitespace(), ""))
@@ -115,7 +115,7 @@ fn parse_tuning(input: &String) -> Result<Vec<Note>> {
 
     let mut notes: Vec<Note> = Vec::with_capacity(input.len());
 
-    for note in input.into_iter() {
+    for note in input {
         notes.push(Note::try_from_string(&note)?);
     }
 

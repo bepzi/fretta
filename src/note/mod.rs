@@ -18,7 +18,7 @@ pub enum Note {
 }
 
 impl Note {
-    pub fn try_from_string(s: &String) -> Result<Note> {
+    pub fn try_from_string(s: &str) -> Result<Note> {
         match s.as_ref() {
             "A" => Ok(Note::A),
             "A#" | "Bb" => Ok(Note::ASharp),
